@@ -1,0 +1,30 @@
+# ── Dati personali: MAI su git ──────────────────────────────
+data/
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+ChatExport_*/
+*_chat.txt
+result.json
+logs/
+settings.json
+
+# ── Python / tooling ────────────────────────────────────────
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# ── Editor / OS ─────────────────────────────────────────────
+.DS_Store
+.idea/
+.vscode/
+.streamlit/secrets.toml

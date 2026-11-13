@@ -1,0 +1,2 @@
+# Installazione completa (equivale a: pip install -e ".[all]"). Più semplice: ./start.sh
+-e .[all]

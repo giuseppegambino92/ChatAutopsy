@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chatautopsy"
+version = "0.3.0"
+description = "Forensic, statistical and psychometric autopsy of WhatsApp and Telegram chats — 100% local, English/Italian UI."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["whatsapp", "telegram", "chat-analysis", "local-first", "streamlit", "rag", "privacy"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Environment :: Web Environment",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: English",
+    "Natural Language :: Italian",
+]
+dependencies = [
+    "streamlit>=1.50.0",
+    "plotly>=5.20.0",
+    "networkx>=3.2",
+    "pandas>=2.1.0",
+    "numpy>=1.26.0",
+    "scikit-learn>=1.4.0",
+    "emoji>=2.10.0",
+    "sqlite-vec>=0.1.6",
+    "openai>=1.40.0",
+    "huggingface_hub>=0.23",
+    "tqdm>=4.66.0",
+]
+
+[project.optional-dependencies]
+# Ricerca semantica (embedding locali su MPS/CUDA/CPU)
+embeddings = ["torch>=2.3.0", "sentence-transformers>=3.0.0"]
+# LLM locale su Apple Silicon (server OpenAI-compatible)
+mlx = ["mlx-lm>=0.20; platform_system == 'Darwin' and platform_machine == 'arm64'"]
+all = ["chatautopsy[embeddings,mlx]"]
+dev = ["pytest>=8", "ruff>=0.5"]
+# Rigenerare le schermate del README (scripts/make_screenshots.py)
+docs = ["playwright>=1.45", "pillow>=10"]
+
+[project.scripts]
+chatautopsy = "chatautopsy.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/giuseppegambino92/ChatAutopsy"
+
+[tool.setuptools]
+packages = ["chatautopsy"]
+
+[tool.setuptools.package-data]
+chatautopsy = ["py.typed", ".streamlit/*.toml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "embeddings: richiede un modello di embedding nella cache locale (saltato altrimenti)",
+]
+
+[tool.ruff]
+line-length = 130
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E501", "E731", "E741"]
