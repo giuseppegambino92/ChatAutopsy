@@ -88,7 +88,8 @@ def start_app(data_dir: Path, db: Path, port: int, lang: str) -> subprocess.Pope
     env = dict(os.environ, CHATAUTOPSY_DATA_DIR=str(data_dir), CHATAUTOPSY_OPEN_DB=str(db), HF_HUB_OFFLINE="1",
                CHATAUTOPSY_LANG=lang)
     cmd = [sys.executable, "-m", "streamlit", "run", str(ROOT / "chatautopsy" / "app.py"), "--server.port", str(port),
-           "--server.headless", "true", "--browser.gatherUsageStats", "false", "--theme.base", "dark",
+           "--server.headless", "true", "--server.address", "127.0.0.1", "--browser.gatherUsageStats", "false",
+           "--theme.base", "dark",
            "--theme.primaryColor", "#ff4b6e", "--theme.backgroundColor", "#0e1117",
            "--theme.secondaryBackgroundColor", "#171b26", "--theme.textColor", "#e6e6eb"]
     proc = subprocess.Popen(cmd, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

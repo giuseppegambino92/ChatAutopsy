@@ -51,12 +51,31 @@ def launch_app(port: int = 8501, open_db: Optional[str] = None, open_browser: bo
     if open_db:
         env["CHATAUTOPSY_OPEN_DB"] = str(open_db)
     env.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+    # Sempre headless: altrimenti al primo avvio Streamlit chiede un'email nel terminale (e senza TTY si chiude).
+    # Il browser lo apriamo noi quando la dashboard risponde.
     cmd = [sys.executable, "-m", "streamlit", "run", str(APP_PATH),
-           "--server.port", str(port), "--server.headless", "false" if open_browser else "true",
+           "--server.port", str(port), "--server.headless", "true",
+           # solo questo computer: la dashboard mostra chat private, mai esporla sulla rete locale
+           "--server.address", "127.0.0.1",
            "--server.maxUploadSize", "2048", "--browser.gatherUsageStats", "false",
            "--theme.base", "dark", "--theme.primaryColor", "#ff4b6e", "--theme.backgroundColor", "#0e1117",
            "--theme.secondaryBackgroundColor", "#171b26", "--theme.textColor", "#e6e6eb"]
     print(t("🧬 ChatAutopsy → http://localhost:{p}   (Ctrl+C per chiudere)", p=port))
+    if open_browser:
+        import threading
+        import urllib.request
+        import webbrowser
+
+        def _open_when_ready() -> None:
+            for _ in range(240):
+                try:
+                    urllib.request.urlopen(f"http://127.0.0.1:{port}/_stcore/health", timeout=1)
+                    webbrowser.open(f"http://localhost:{port}")
+                    return
+                except Exception:
+                    time.sleep(0.5)
+
+        threading.Thread(target=_open_when_ready, daemon=True).start()
     try:
         return subprocess.call(cmd, env=env)
     except KeyboardInterrupt:

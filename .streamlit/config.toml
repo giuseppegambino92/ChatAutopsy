@@ -6,6 +6,7 @@ secondaryBackgroundColor = "#171b26"
 textColor = "#e6e6eb"
 
 [server]
+address = "127.0.0.1"   # solo localhost: la dashboard mostra chat private
 maxUploadSize = 1024
 headless = true
 
